@@ -12,15 +12,15 @@ fn main() {
 
 fn comprises<V, T>(v: V, s: &[T]) -> bool
     where V: IntoIterator<Item=T>,
-          V::Item: Eq + Hash + Copy {
+          T: Eq + Hash + Copy {
     // Construct a bag of the contents of v
-    let mut vb: HashMap<T, u32> = HashMap::new();
+    let mut vb: HashMap<T, usize> = HashMap::new();
     for i in v {
         bump(&mut vb, &i);
     }
 
     // Construct a bag of the contents of s
-    let mut sb: HashMap<T, u32> = HashMap::new();
+    let mut sb: HashMap<T, usize> = HashMap::new();
     for i in s {
         bump(&mut sb, &i);
     }
@@ -30,7 +30,7 @@ fn comprises<V, T>(v: V, s: &[T]) -> bool
 }
 
 // Bump the ith entry of bag b
-fn bump<T>(b: &mut HashMap<T, u32>, i: &T)
+fn bump<T>(b: &mut HashMap<T, usize>, i: &T)
     where T: Eq + Hash + Copy {
     let count = b.entry(*i).or_insert(0);
     *count += 1;
