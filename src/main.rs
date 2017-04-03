@@ -2,22 +2,20 @@ use std::collections::HashMap;
 use std::hash::Hash;
 
 fn main() {
-    let v = vec![(2,3), (1,1), (2,3)];
-    let xs: [(i32,i32); 3] = [(1,1), (2,3), (2,3)];
+    let v = vec![(2, 3), (1, 1), (2, 3)];
+    let xs: [(i32, i32); 3] = [(1, 1), (2, 3), (2, 3)];
     let s = &xs;
 
     // Compare v and s for equality.
-
     println!("{}", comprises(v, s));
 }
 
-
-fn comprises<T>(v: Vec<T>, s: &[T]) -> bool
-    where T: Eq + Hash + Copy {
-
+fn comprises<V, T>(v: V, s: &[T]) -> bool
+    where V: IntoIterator<Item=T>,
+          V::Item: Eq + Hash + Copy {
     // Construct a bag of the contents of v
     let mut vb: HashMap<T, u32> = HashMap::new();
-    for i in &v {
+    for i in v {
         bump(&mut vb, &i);
     }
 
