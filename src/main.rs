@@ -6,11 +6,19 @@ fn main() {
     let s = [(1, 1), (2, 3), (2, 3)];
 
     // Compare v and s for equality.
-    println!("{}", comprises    (v, &s));
+    println!("{}", comprises(&v, &s));
+
+    let w: Vec<(i32, i32)> = vec![(2, 3), (2, 3), (1, 1)];
+
+    // Compare v and w for equality.
+    println!("{}", comprises(&v, &w));
+    
+    // Compare w and s for equality
+    println!("{}", comprises(&w, &s));
 }
 
 fn comprises<'a, V, S, T: 'a>(v: V, s: S) -> bool
-    where V: IntoIterator<Item=T>,
+    where V: IntoIterator<Item=&'a T>,
           S: IntoIterator<Item=&'a T>,
           T: Eq + Hash + Copy,
 {
@@ -19,6 +27,15 @@ fn comprises<'a, V, S, T: 'a>(v: V, s: S) -> bool
     for i in v {
         bump(&mut vb, &i);
     }
+    // Desugared version
+//    match IntoIterator::into_iter(v) {
+//        mut iter => loop {
+//            match iter.next() {
+//                Some(x) => { bump(&mut vb, &x); },
+//                None => break,
+//            }
+//        },
+//    };
 
     // Construct a bag of the contents of s
     let mut sb: HashMap<T, usize> = HashMap::new();
